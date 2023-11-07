@@ -25,25 +25,29 @@ public:
 
 class Solution {
     vector<vector<int>> ret;
-    vector<int> path{};
-    int numsLen = 0;
+    vector<int> path;
+    vector<bool> used;
+    int numsLen;
 
     void comeS(vector<int>& nums, int startIndex){
         ret.push_back(path);
-
-        if(startIndex == numsLen){
+        if(startIndex == numsLen)
             return;
-        }
-
         for(int i = startIndex; i != numsLen; ++i){
-            path.push_back(nums[i]);
-            comeS(nums,i + 1);
+            if(i > 0 && nums[i - 1] == nums[i] && used[i - 1] == 0)
+                continue;
+            used[i] = 1;
+            path.emplace_back(nums[i]);
+            comeS(nums, i + 1);
             path.pop_back();
+            used[i] = 0;
         }
     }
 public:
-    vector<vector<int>> subsets(vector<int>&& nums) {
+    vector<vector<int>> subsetsWithDup(vector<int>&& nums) {
+        sort(nums.begin(),nums.end());
         numsLen = nums.size();
+        used.resize(numsLen,0);
         comeS(nums,0);
         return ret;
     }
@@ -53,7 +57,7 @@ int main() {
 
     Solution s;
 
-    for(auto e : s.subsets({1,2,3})){
+    for(auto e : s.subsetsWithDup({1,1,2,2})){
         for(auto n : e)
             cout<<n<<" ";
         cout<<endl;
