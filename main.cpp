@@ -1,4 +1,4 @@
-#include <iostream>
+#include<iostream>
 #include <string>
 #include <algorithm>
 #include <vector>
@@ -12,10 +12,6 @@
 #include <numeric>
 using namespace std;
 
-void MyPrint(std::string &n) {
-    std::cout << n << " ";
-}
-
 class MyCompare {
 public:
     bool operator()(double a, double b) const {
@@ -24,32 +20,36 @@ public:
 };
 
 class Solution {
-    vector<vector<int>> ret;
+    vector<vector<int>> res;
     vector<int> path;
-    vector<bool> used;
     int numsLen;
 
-    void comeS(vector<int>& nums, int startIndex){
-        ret.push_back(path);
-        if(startIndex == numsLen)
-            return;
-        for(int i = startIndex; i != numsLen; ++i){
-            if(i > 0 && nums[i - 1] == nums[i] && used[i - 1] == 0)
+    void backTrack(vector<int> &nums, int startIndex) {
+        if (path.size() > 1) {
+            res.push_back(path);
+        }
+
+        unordered_set<int> used;
+
+        for (int i = startIndex; i != numsLen; ++i) {
+            //去重
+            if(used.count(nums[i]) == 1)
                 continue;
-            used[i] = 1;
-            path.emplace_back(nums[i]);
-            comeS(nums, i + 1);
+            used.insert(nums[i]);
+            //递增
+            if (path.size() != 0 && nums[i] < *path.rbegin())
+                continue;
+            path.push_back(nums[i]);
+            backTrack(nums, i + 1);
             path.pop_back();
-            used[i] = 0;
         }
     }
+
 public:
-    vector<vector<int>> subsetsWithDup(vector<int>&& nums) {
-        sort(nums.begin(),nums.end());
+    vector<vector<int>> findSubsequences(vector<int> &&nums) {
         numsLen = nums.size();
-        used.resize(numsLen,0);
-        comeS(nums,0);
-        return ret;
+        backTrack(nums, 0);
+        return res;
     }
 };
 
@@ -57,10 +57,10 @@ int main() {
 
     Solution s;
 
-    for(auto e : s.subsetsWithDup({1,1,2,2})){
-        for(auto n : e)
-            cout<<n<<" ";
-        cout<<endl;
+    for (auto e: s.findSubsequences({1,1,1,2,2,2,3,3,3})) {
+        for (auto n: e)
+            cout << n << " ";
+        cout << endl;
     }
 
 
