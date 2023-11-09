@@ -22,33 +22,30 @@ public:
 class Solution {
     vector<vector<int>> res;
     vector<int> path;
+    vector<bool> used;
     int numsLen;
 
-    void backTrack(vector<int> &nums, int startIndex) {
-        if (path.size() > 1) {
+    void backTrack(vector<int>& nums){
+        if(path.size() == numsLen) {
             res.push_back(path);
+            return;
         }
 
-        unordered_set<int> used;
-
-        for (int i = startIndex; i != numsLen; ++i) {
-            //去重
-            if(used.count(nums[i]) == 1)
+        for(int i = 0; i != numsLen; ++i){
+            if(used[i])
                 continue;
-            used.insert(nums[i]);
-            //递增
-            if (path.size() != 0 && nums[i] < *path.rbegin())
-                continue;
-            path.push_back(nums[i]);
-            backTrack(nums, i + 1);
+            used[i] = true;
+            path.emplace_back(nums[i]);
+            backTrack(nums);
             path.pop_back();
+            used[i] = false;
         }
     }
-
 public:
-    vector<vector<int>> findSubsequences(vector<int> &&nums) {
+    vector<vector<int>> permute(vector<int>&& nums) {
         numsLen = nums.size();
-        backTrack(nums, 0);
+        used.resize(numsLen, false);
+        backTrack(nums);
         return res;
     }
 };
@@ -57,7 +54,7 @@ int main() {
 
     Solution s;
 
-    for (auto e: s.findSubsequences({1,1,1,2,2,2,3,3,3})) {
+    for (auto e: s.permute({1,2,3})) {
         for (auto n: e)
             cout << n << " ";
         cout << endl;
