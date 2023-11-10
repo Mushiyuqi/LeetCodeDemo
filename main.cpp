@@ -32,8 +32,10 @@ class Solution {
         }
 
         for(int i = 0; i != numsLen; ++i){
-            if(used[i])
+            //树枝去重 和 树层去重
+            if(used[i] || i > 0 && nums[i - 1] == nums[i] && used[i - 1] == 0)
                 continue;
+
             used[i] = true;
             path.emplace_back(nums[i]);
             backTrack(nums);
@@ -42,7 +44,8 @@ class Solution {
         }
     }
 public:
-    vector<vector<int>> permute(vector<int>&& nums) {
+    vector<vector<int>> permuteUnique(vector<int>&& nums) {
+        sort(nums.begin(), nums.end());
         numsLen = nums.size();
         used.resize(numsLen, false);
         backTrack(nums);
@@ -54,7 +57,7 @@ int main() {
 
     Solution s;
 
-    for (auto e: s.permute({1,2,3})) {
+    for (auto e: s.permuteUnique({1,1,2})) {
         for (auto n: e)
             cout << n << " ";
         cout << endl;
