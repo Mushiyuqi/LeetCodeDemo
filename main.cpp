@@ -13,63 +13,65 @@
 
 using namespace std;
 
-class MyCompare {
-public:
-    bool operator()(double a, double b) const {
-        return a > b;
-    }
-};
-
 class Solution {
-    vector<vector<string>> res;
-    vector<string> path;
 
-    bool isOk(int l, int r, int n) {
-        //列
-        for (int i = 0; i != l; ++i) {
-            if (path[i][r] == 'Q')
-                return false;
-        }
-        for (int i = l - 1, j = r - 1; i >= 0 && j >= 0; --i, --j) {
-            if (path[i][j] == 'Q')
+    bool isOk(vector<vector<char>> &board, int l, int r) {
+        for (int i = 0; i != 9; ++i) {
+            if (i == r)
+                continue;
+            if (board[l][i] == board[l][r])
                 return false;
         }
 
-        for (int i = l - 1, j = r + 1; i >= 0 && j < n ; --i, ++j){
-            if (path[i][j] == 'Q')
+        for (int i = 0; i != 9; ++i) {
+            if (i == l)
+                continue;
+            if (board[i][r] == board[l][r])
                 return false;
+        }
+
+        int _l = (l / 3) * 3;
+        int _r = (r / 3) * 3;
+        for (int i = _l; i != _l + 3; ++i) {
+            if (i == l)
+                continue;
+            for (int j = _r; j != _r + 3; ++j) {
+                if (j == r)
+                    continue;
+                if (board[i][j] == board[l][r])
+                    return false;
+            }
         }
 
         return true;
     }
 
-    void backTrack(int n, int l) {
-        if (l == n) {
-            res.emplace_back(path);
-            return;
-        }
+    bool backTrack(vector<vector<char>> &board) {
 
-        for (int r = 0; r != n; ++r) {
-            path[l][r] = 'Q';
-            if (isOk(l, r, n))
-                backTrack(n, l + 1);
-            path[l][r] = '.';
-        }
+        for (int i = 0; i != 9; ++i) {
+            for (int j = 0; j != 9; ++j) {
+                if(board[i][j] != '.')
+                    continue;
 
-    }
+                for(char m = '1'; m != '9' + 1; ++m){
+                    board[i][j] = m;
+                    if(isOk(board, i, j)){
+                        if(backTrack(board))
+                            return true;
+                    }
+                    board[i][j] = '.';
+                }
 
-public:
-    vector<vector<string>> solveNQueens(int n) {
-        for (int i = 0; i != n; ++i) {
-            path.push_back("");
-            for (int j = 0; j != n; ++j) {
-                path.rbegin()->push_back('.');
+                return false;
             }
         }
 
-        backTrack(n, 0);
+        return true;
+    }
 
-        return res;
+public:
+    void solveSudoku(vector<vector<char>> &board) {
+        backTrack(board);
     }
 };
 
@@ -77,9 +79,20 @@ int main() {
 
     Solution s;
 
-    for (auto e: s.solveNQueens(1)) {
+    vector<vector<char>> board{{'5', '3', '.', '.', '7', '.', '.', '.', '.'},
+                               {'6', '.', '.', '1', '9', '5', '.', '.', '.'},
+                               {'.', '9', '8', '.', '.', '.', '.', '6', '.'},
+                               {'8', '.', '.', '.', '6', '.', '.', '.', '3'},
+                               {'4', '.', '.', '8', '.', '3', '.', '.', '1'},
+                               {'7', '.', '.', '.', '2', '.', '.', '.', '6'},
+                               {'.', '6', '.', '.', '.', '.', '2', '8', '.'},
+                               {'.', '.', '.', '4', '1', '9', '.', '.', '5'},
+                               {'.', '.', '.', '.', '8', '.', '.', '7', '9'}};
+
+    s.solveSudoku(board);
+    for (auto e: board) {
         for (auto n: e)
-            cout << n << " ";
+            cout << n << ' ';
         cout << endl;
     }
 
