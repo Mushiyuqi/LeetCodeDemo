@@ -15,15 +15,15 @@ using namespace std;
 
 class Solution {
 public:
-    int maxProfit(vector<int>&& prices) {
-        int profit = 0;
-
-        for(int i = 0, j = 1; i != prices.size() - 1; ++j, ++i){
-            if(prices[j] > prices[i])
-                profit += prices[j] - prices[i];
+    bool canJump(vector<int>&& nums) {
+        int end = nums.size() - 1;
+        int maxFoot = nums[0];
+        for(int i = 0; i < end; ++i){
+            maxFoot = max(maxFoot, i + nums[i]);
+            if(nums[i] == 0 && maxFoot <= i)
+                return false;
         }
-
-        return profit;
+        return true;
     }
 };
 
@@ -31,14 +31,13 @@ int main() {
 
     Solution s;
 
-    cout << s.maxProfit({7,1,5,3,6,4}) << endl;
+    cout << s.canJump({3,2,1,0,4}) << endl;
 
 //    for (auto e: board) {
 //        for (auto n: e)
 //            cout << n << ' ';
 //        cout << endl;
 //    }
-
 
     return 0;
 }
