@@ -15,18 +15,15 @@ using namespace std;
 
 class Solution {
 public:
-    int wiggleMaxLength(vector<int> &&nums) {
-        int len = nums.size();
-        int preDiff = 0;
-        int curDiff = 0;
-        int res = 1;
+    int maxSubArray(vector<int>&& nums) {
+        int res = 0;
+        int sum = 0;
 
-        for (int i = 0; i < len - 1; ++i) {
-            curDiff = nums[i + 1] - nums[i];
-            if ((preDiff <= 0 && curDiff > 0) || (preDiff >= 0 && curDiff < 0))
-                res++;
-            if (curDiff != 0)
-                preDiff = curDiff;
+        for(int i = 0; i != nums.size(); ++i){
+            if(sum < 0)
+                sum = 0;
+            sum += nums[i];
+            res = max(sum ,res);
         }
         return res;
     }
@@ -36,7 +33,7 @@ int main() {
 
     Solution s;
 
-    cout << s.wiggleMaxLength({1, 2, 3, 4, 5, 6, 7, 8, 9}) << endl;
+    cout << s.maxSubArray({-2,1,-3,4,-1,2,1,-5,4}) << endl;
 
 //    for (auto e: board) {
 //        for (auto n: e)
