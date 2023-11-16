@@ -15,17 +15,15 @@ using namespace std;
 
 class Solution {
 public:
-    int maxSubArray(vector<int>&& nums) {
-        int res = 0;
-        int sum = 0;
+    int maxProfit(vector<int>&& prices) {
+        int profit = 0;
 
-        for(int i = 0; i != nums.size(); ++i){
-            if(sum < 0)
-                sum = 0;
-            sum += nums[i];
-            res = max(sum ,res);
+        for(int i = 0, j = 1; i != prices.size() - 1; ++j, ++i){
+            if(prices[j] > prices[i])
+                profit += prices[j] - prices[i];
         }
-        return res;
+
+        return profit;
     }
 };
 
@@ -33,7 +31,7 @@ int main() {
 
     Solution s;
 
-    cout << s.maxSubArray({-2,1,-3,4,-1,2,1,-5,4}) << endl;
+    cout << s.maxProfit({7,1,5,3,6,4}) << endl;
 
 //    for (auto e: board) {
 //        for (auto n: e)
