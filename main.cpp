@@ -15,15 +15,21 @@ using namespace std;
 
 class Solution {
 public:
-    bool canJump(vector<int>&& nums) {
-        int end = nums.size() - 1;
-        int maxFoot = nums[0];
-        for(int i = 0; i < end; ++i){
-            maxFoot = max(maxFoot, i + nums[i]);
-            if(nums[i] == 0 && maxFoot <= i)
-                return false;
+    int jump(vector<int> &&nums) {
+        int footprint = 0;
+        int index = nums[0];
+        int maxStep = nums[0];
+        for(int i = 0; i != nums.size() - 1; ++i){
+            maxStep = max(maxStep, nums[i] + i);
+            if(i == index){
+                ++footprint;
+                index = maxStep;
+            }
+            if(index>=nums.size() - 1){
+                return ++footprint;
+            }
         }
-        return true;
+        return footprint;
     }
 };
 
@@ -31,13 +37,7 @@ int main() {
 
     Solution s;
 
-    cout << s.canJump({3,2,1,0,4}) << endl;
-
-//    for (auto e: board) {
-//        for (auto n: e)
-//            cout << n << ' ';
-//        cout << endl;
-//    }
+    cout << s.jump({2,3,1,1,1,4}) << endl;
 
     return 0;
 }
