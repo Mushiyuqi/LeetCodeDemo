@@ -15,21 +15,27 @@ using namespace std;
 
 class Solution {
 public:
-    int jump(vector<int> &&nums) {
-        int footprint = 0;
-        int index = nums[0];
-        int maxStep = nums[0];
-        for(int i = 0; i != nums.size() - 1; ++i){
-            maxStep = max(maxStep, nums[i] + i);
-            if(i == index){
-                ++footprint;
-                index = maxStep;
+    int largestSumAfterKNegations(vector<int> &&nums, int k) {
+        sort(nums.begin(), nums.end(), [](int a,int b){
+            a = a < 0 ? -a : a;
+            b = b < 0 ? -b : b;
+            return a > b;
+        });
+        int sum = 0;
+        for(int i = 0; i != nums.size(); ++i){
+            if(nums[i] < 0 && k > 0){
+                nums[i] *= -1;
+                --k;
             }
-            if(index>=nums.size() - 1){
-                return ++footprint;
-            }
+            sum += nums[i];
         }
-        return footprint;
+
+        if(k % 2){
+            sum -= *nums.rbegin();
+            *nums.rbegin() *= -1;
+            sum += *nums.rbegin();
+        }
+        return sum;
     }
 };
 
@@ -37,7 +43,7 @@ int main() {
 
     Solution s;
 
-    cout << s.jump({2,3,1,1,1,4}) << endl;
+    cout << s.largestSumAfterKNegations({-4, -2, -3}, 1) << endl;// -8 -5 -5 -3 -2 3
 
     return 0;
 }
