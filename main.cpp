@@ -15,27 +15,21 @@ using namespace std;
 
 class Solution {
 public:
-    int largestSumAfterKNegations(vector<int> &&nums, int k) {
-        sort(nums.begin(), nums.end(), [](int a,int b){
-            a = a < 0 ? -a : a;
-            b = b < 0 ? -b : b;
-            return a > b;
-        });
-        int sum = 0;
-        for(int i = 0; i != nums.size(); ++i){
-            if(nums[i] < 0 && k > 0){
-                nums[i] *= -1;
-                --k;
+    int canCompleteCircuit(vector<int>&& gas, vector<int>&& cost) {
+            int curSum = 0;
+            int total = 0;
+            int start = 0;
+            for(int i = 0; i != gas.size(); ++i){
+                curSum += gas[i] - cost[i];
+                total += gas[i] - cost[i];
+                if(curSum < 0){
+                    curSum = 0;
+                    start = i + 1;
+                }
             }
-            sum += nums[i];
-        }
-
-        if(k % 2){
-            sum -= *nums.rbegin();
-            *nums.rbegin() *= -1;
-            sum += *nums.rbegin();
-        }
-        return sum;
+            if(total < 0)
+                return -1;
+            return start;
     }
 };
 
@@ -43,7 +37,7 @@ int main() {
 
     Solution s;
 
-    cout << s.largestSumAfterKNegations({-4, -2, -3}, 1) << endl;// -8 -5 -5 -3 -2 3
+    cout << s.canCompleteCircuit({1,2,3,4,5}, {3,4,5,1,2}) << endl;// -8 -5 -5 -3 -2 3
 
     return 0;
 }
