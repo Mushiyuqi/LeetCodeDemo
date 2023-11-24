@@ -15,21 +15,22 @@ using namespace std;
 
 class Solution {
 public:
-    int canCompleteCircuit(vector<int>&& gas, vector<int>&& cost) {
-            int curSum = 0;
-            int total = 0;
-            int start = 0;
-            for(int i = 0; i != gas.size(); ++i){
-                curSum += gas[i] - cost[i];
-                total += gas[i] - cost[i];
-                if(curSum < 0){
-                    curSum = 0;
-                    start = i + 1;
-                }
-            }
-            if(total < 0)
-                return -1;
-            return start;
+    int candy(vector<int> &&ratings) {
+        int n = ratings.size();
+        vector<int> candies(ratings.size(), 1);
+        for (int i = 1; i != n; ++i) {
+            if (ratings[i] - ratings[i - 1] > 0)
+                candies[i] = candies[i - 1] + 1;
+        }
+
+        for (int i = n - 2; i != -1; --i) {
+            if (ratings[i] - ratings[i + 1] > 0 && candies[i] <= candies[i + 1])
+                candies[i] = candies[i + 1] + 1;
+        }
+
+        int sum = accumulate(candies.begin(), candies.end(),0);
+
+        return sum;
     }
 };
 
@@ -37,7 +38,7 @@ int main() {
 
     Solution s;
 
-    cout << s.canCompleteCircuit({1,2,3,4,5}, {3,4,5,1,2}) << endl;// -8 -5 -5 -3 -2 3
+    cout << s.candy({1, 2, 3, 4, 1}) << endl;// 1 2 3 4 1
 
     return 0;
 }
