@@ -15,22 +15,17 @@ using namespace std;
 
 class Solution {
 public:
-    int candy(vector<int> &&ratings) {
-        int n = ratings.size();
-        vector<int> candies(ratings.size(), 1);
-        for (int i = 1; i != n; ++i) {
-            if (ratings[i] - ratings[i - 1] > 0)
-                candies[i] = candies[i - 1] + 1;
+    bool lemonadeChange(vector<int>&& bills) {
+        int five = 0, ten = 0;
+        int len = bills.size();
+        for(int i = 0; i != len; ++i){
+            if(bills[i] == 5) ++five;
+            else if(bills[i] == 10){ ++ten; --five;}
+            else if(ten){ --ten;--five;}
+            else{five -= 3;}
+            if(five < 0)return false;
         }
-
-        for (int i = n - 2; i != -1; --i) {
-            if (ratings[i] - ratings[i + 1] > 0 && candies[i] <= candies[i + 1])
-                candies[i] = candies[i + 1] + 1;
-        }
-
-        int sum = accumulate(candies.begin(), candies.end(),0);
-
-        return sum;
+        return true;
     }
 };
 
@@ -38,7 +33,7 @@ int main() {
 
     Solution s;
 
-    cout << s.candy({1, 2, 3, 4, 1}) << endl;// 1 2 3 4 1
+    cout << s.lemonadeChange({5,5,5,10,20}) << endl;// 1 2 3 4 1
 
     return 0;
 }
