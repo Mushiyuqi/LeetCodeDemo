@@ -10,30 +10,41 @@
 #include <cmath>
 #include <queue>
 #include <numeric>
+#include <list>
 
 using namespace std;
 
 class Solution {
 public:
-    bool lemonadeChange(vector<int>&& bills) {
-        int five = 0, ten = 0;
-        int len = bills.size();
-        for(int i = 0; i != len; ++i){
-            if(bills[i] == 5) ++five;
-            else if(bills[i] == 10){ ++ten; --five;}
-            else if(ten){ --ten;--five;}
-            else{five -= 3;}
-            if(five < 0)return false;
+    vector<vector<int>> reconstructQueue(vector<vector<int>>&& people) {
+        sort(people.begin(), people.end(), [](vector<int>& a, vector<int>& b){return a[0] == b[0] ? a[1] <= b[1] : a[0] > b[0];});
+        for(int i = 0; i != people.size(); ++i){
+            if(people[i][1] < i){
+                vector<int> tmp = people[i];
+                for(int j = i; j != tmp[1]; --j){
+                    people[j] = people[j - 1];
+                }
+                people[tmp[1]] = tmp;
+            }
         }
-        return true;
+        return people;
     }
 };
 
 int main() {
 
     Solution s;
-
-    cout << s.lemonadeChange({5,5,5,10,20}) << endl;// 1 2 3 4 1
-
+    //7 0
+    //7 1
+    //6 1
+    //5 0
+    //5 2
+    for(auto &p : s.reconstructQueue({{7,0},{4,4},{7,1},{5,2},{6,1},{5,0}})){
+        for(auto &i : p){
+            cout << i << " " ;
+        }
+        cout<<endl;
+    }
     return 0;
 }
+
