@@ -16,35 +16,33 @@ using namespace std;
 
 class Solution {
 public:
-    vector<vector<int>> reconstructQueue(vector<vector<int>>&& people) {
-        sort(people.begin(), people.end(), [](vector<int>& a, vector<int>& b){return a[0] == b[0] ? a[1] <= b[1] : a[0] > b[0];});
-        for(int i = 0; i != people.size(); ++i){
-            if(people[i][1] < i){
-                vector<int> tmp = people[i];
-                for(int j = i; j != tmp[1]; --j){
-                    people[j] = people[j - 1];
-                }
-                people[tmp[1]] = tmp;
+    int findMinArrowShots(vector<vector<int>>&& points) {
+        int len = points.size();
+        if(len == 0)
+            return 0;
+        sort(points.begin(), points.end(), [](vector<int>& a, vector<int>& b){return a[0]<=b[0];});
+        vector<int> resign = points[0];
+        int res = 1;
+
+        for(int i = 1; i != len; ++i){
+            if(points[i][0] <= resign[1]){
+                resign[0] = points[i][0];
+                resign[1] = points[i][1] <= resign[1] ? points[i][1] : resign[1];
+            }else{
+                resign = points[i];
+                ++res;
             }
         }
-        return people;
+        return res;
     }
 };
 
 int main() {
 
     Solution s;
-    //7 0
-    //7 1
-    //6 1
-    //5 0
-    //5 2
-    for(auto &p : s.reconstructQueue({{7,0},{4,4},{7,1},{5,2},{6,1},{5,0}})){
-        for(auto &i : p){
-            cout << i << " " ;
-        }
-        cout<<endl;
-    }
+
+    cout<<s.findMinArrowShots({{3,9},{7,12},{3,8},{6,8},{9,10},{2,9},{0,9},{3,9},{0,6},{2,8}})<<endl;
+
     return 0;
 }
 
