@@ -16,20 +16,16 @@ using namespace std;
 
 class Solution {
 public:
-    int findMinArrowShots(vector<vector<int>>&& points) {
-        int len = points.size();
-        if(len == 0)
-            return 0;
-        sort(points.begin(), points.end(), [](vector<int>& a, vector<int>& b){return a[0]<=b[0];});
-        vector<int> resign = points[0];
-        int res = 1;
-
-        for(int i = 1; i != len; ++i){
-            if(points[i][0] <= resign[1]){
-                resign[0] = points[i][0];
-                resign[1] = points[i][1] <= resign[1] ? points[i][1] : resign[1];
+    int eraseOverlapIntervals(vector<vector<int>>&& intervals) {
+        int res = 0;
+        sort(intervals.begin(), intervals.end(), [](vector<int>& a, vector<int>& b){return a[0] < b[0];});
+        vector<int> tmp = {intervals[0][0], intervals[0][0]};
+        for(int i = 0; i != intervals.size(); ++i){
+            if(intervals[i][0] >= tmp[1]){
+                tmp = intervals[i];
+                continue;
             }else{
-                resign = points[i];
+                tmp = {intervals[i][0], min(tmp[1], intervals[i][1])};
                 ++res;
             }
         }
@@ -41,7 +37,7 @@ int main() {
 
     Solution s;
 
-    cout<<s.findMinArrowShots({{3,9},{7,12},{3,8},{6,8},{9,10},{2,9},{0,9},{3,9},{0,6},{2,8}})<<endl;
+    cout<<s.eraseOverlapIntervals({{1,100},{11,22},{1,11},{2,12}})<<endl;
 
     return 0;
 }
