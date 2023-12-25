@@ -16,18 +16,33 @@ using namespace std;
 
 class Solution {
 public:
-    int eraseOverlapIntervals(vector<vector<int>>&& intervals) {
-        int res = 0;
-        sort(intervals.begin(), intervals.end(), [](vector<int>& a, vector<int>& b){return a[0] < b[0];});
-        vector<int> tmp = {intervals[0][0], intervals[0][0]};
-        for(int i = 0; i != intervals.size(); ++i){
-            if(intervals[i][0] >= tmp[1]){
-                tmp = intervals[i];
-                continue;
-            }else{
-                tmp = {intervals[i][0], min(tmp[1], intervals[i][1])};
-                ++res;
+    vector<int> partitionLabels(string s) {
+        vector<int> res;
+        vector<bool> found(27, false);
+        int left ,right , end;
+
+        for(int i = 0; i != s.size(); i = left + 1){
+            left = i;
+            end = -1;
+            right = s.size() - 1;
+            while(left != end){
+                while(s[right] != s[left] && right != end){
+                    --right;
+                }
+                end = right;
+                if(left == right)
+                    break;
+                else{
+                    found[s[left] - 'a'] = true;
+                    ++left;
+                    while(found[s[left] - 'a'] && left < end)
+                        ++left;
+                    right = s.size() - 1;
+                }
+                if(end == s.size())
+                    break;
             }
+            res.emplace_back(end - i + 1);
         }
         return res;
     }
@@ -37,7 +52,8 @@ int main() {
 
     Solution s;
 
-    cout<<s.eraseOverlapIntervals({{1,100},{11,22},{1,11},{2,12}})<<endl;
+    for(auto e : s.partitionLabels("ababcbacadefegdehijhklij"))
+        cout<<e<<" "<<endl;
 
     return 0;
 }
