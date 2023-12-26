@@ -16,33 +16,16 @@ using namespace std;
 
 class Solution {
 public:
-    vector<int> partitionLabels(string s) {
-        vector<int> res;
-        vector<bool> found(27, false);
-        int left ,right , end;
-
-        for(int i = 0; i != s.size(); i = left + 1){
-            left = i;
-            end = -1;
-            right = s.size() - 1;
-            while(left != end){
-                while(s[right] != s[left] && right != end){
-                    --right;
-                }
-                end = right;
-                if(left == right)
-                    break;
-                else{
-                    found[s[left] - 'a'] = true;
-                    ++left;
-                    while(found[s[left] - 'a'] && left < end)
-                        ++left;
-                    right = s.size() - 1;
-                }
-                if(end == s.size())
-                    break;
+    vector<vector<int>> merge(vector<vector<int>>& intervals) {
+        vector<vector<int>> res;
+        sort(intervals.begin(), intervals.end());
+        res.emplace_back(intervals[0]);
+        for(int i = 1; i < intervals.size(); ++i){
+            if(intervals[i][0] > res.back()[1]){
+                res.emplace_back(intervals[i]);
+            }else{
+                res.back()[1] = max(intervals[i][1], res.back()[1]);
             }
-            res.emplace_back(end - i + 1);
         }
         return res;
     }
@@ -51,9 +34,6 @@ public:
 int main() {
 
     Solution s;
-
-    for(auto e : s.partitionLabels("ababcbacadefegdehijhklij"))
-        cout<<e<<" "<<endl;
 
     return 0;
 }
