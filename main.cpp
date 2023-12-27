@@ -11,23 +11,38 @@
 #include <queue>
 #include <numeric>
 #include <list>
+#include <array>
 
 using namespace std;
 
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+
+    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+};
+
 class Solution {
+    int result = 0;
+    int travel(TreeNode *root){
+        if(root == nullptr) return 2;
+        int left = travel(root->left);
+        int right = travel(root->right);
+
+        if(left == 2 && right == 2) return 0;
+        if(left == 0 || right == 0) {++result; return 1;}
+        return 2;
+    }
+
 public:
-    vector<vector<int>> merge(vector<vector<int>>& intervals) {
-        vector<vector<int>> res;
-        sort(intervals.begin(), intervals.end());
-        res.emplace_back(intervals[0]);
-        for(int i = 1; i < intervals.size(); ++i){
-            if(intervals[i][0] > res.back()[1]){
-                res.emplace_back(intervals[i]);
-            }else{
-                res.back()[1] = max(intervals[i][1], res.back()[1]);
-            }
-        }
-        return res;
+    int minCameraCover(TreeNode *root) {
+        if(travel(root) == 0) return ++result;
+        return result;
     }
 };
 
@@ -37,4 +52,3 @@ int main() {
 
     return 0;
 }
-
